@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>id_Info</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/bui-bootstrap/Css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/bui-bootstrap/Css/bootstrap-responsive.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/bui-bootstrap/Css/style.css" />
+    <link href="__PUBLIC__/bui-bootstrap/assets/css/dpl-min.css" rel="stylesheet">
+   <link href="__PUBLIC__/bui-bootstrap/assets/css/bui-min.css" rel="stylesheet">
+    <script src="__PUBLIC__/bui-bootstrap/assets/js/jquery-1.8.1.min.js"></script>
+    <script src="__PUBLIC__/bui-bootstrap/assets/js/bui-min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/bui-bootstrap/Js/bootstrap.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/bui-bootstrap/Js/ckform.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/bui-bootstrap/Js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/area.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/ckUserInfo.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/lib/jquery.form.js"></script>
+    <!--弹出对话框-->
+    <link rel="stylesheet" href="__PUBLIC__/artDialog/css/ui-dialog.css">
+    <script src="__PUBLIC__/artDialog/dist/dialog-min.js"></script>
+
+    <style type="text/css">
+        body {
+            padding-bottom: 40px;
+        }
+        .sidebar-nav {
+            padding: 9px 0;
+        }
+
+        @media (max-width: 980px) {
+            /* Enable use of floated navbar text */
+            .navbar-text.pull-right {
+                float: none;
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+<form id="userinfo" action="{:U('Index/Task/userInfoHandle')}" method="post" class="definewidth m20">
+<input type="hidden" name="task_id" value="{:I('task_id')}" />
+    <table name="userinfo" class="table table-bordered table-hover definewidth m10">
+        <tr>
+            <td width="10%" class="tableleft">姓名</td>
+            <td><input type="text" name="name" value="{$userinfo.name}"/></td>
+        </tr>
+        <tr>
+            <td class="tableleft">性别</td>
+            <td>
+                男&nbsp;<input type="radio" name="sex" value="0"
+                    <eq name="userinfo.sex" value='0'>checked</eq> /> &nbsp;&nbsp;&nbsp;
+                女&nbsp;<input type="radio" name="sex" value="1"
+                    <eq name="userinfo.sex" value='1'>checked</eq> /> 
+            </td>
+        </tr>
+        <tr>
+            <td class="tableleft">学号</td>
+            <td><input type="text" name="number"/></td>
+        </tr>
+        <tr>
+            <td class="tableleft">入学年份</td>
+            <td>
+                <select name="entrance">
+                <option <if condition="$userinfo['entrance']==null">selected="selected"</if>>请选择入学时间</option>
+                <foreach name='entrance' item = 'entrance'>
+                    <option value="{$entrance['options']}"> </option>
+                </foreach>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="tableleft">学院专业年级</td>
+            <td>
+                <select name="college" id="college">
+                <option <if condition="$userinfo['college']==null">selected="selected"</if>>请选择学院</option>
+                    <foreach name='college' item='v'>
+                      <option value="{$v['id']}"<if condition="$userinfo['college']==$v['name']">selected="selected"</if>>{$v['name']}</option>
+                    </foreach>
+                </select>&nbsp;&nbsp;
+                <select name="major" id="major">
+                <option <if condition="$userinfo['major']==null">selected="selected"</if> class="stay">请选择专业</option>
+                    <foreach name='major' item='v'>
+                      <option value="{$v['id']}"<if condition="$userinfo['major']==$v['name']">selected="selected"</if>>{$v['name']}</option>
+                    </foreach>
+                </select>&nbsp;&nbsp;
+                <select name="class" id="class">
+                <option <if condition="$userinfo['class']==null">selected="selected"</if> class="stay">请选择班级</option>
+                    <foreach name='class' item='v'>
+                      <option value="{$v['id']}"<if condition="$userinfo['class']==$v['name']">selected="selected"</if>>{$v['name']}</option>
+                    </foreach>
+                </select>&nbsp;&nbsp;
+            </td>
+        </tr>
+       
+        <tr>
+            <td class="tableleft">手机号</td>
+            <td><input type="text" name="phone" value="{$userinfo.phone}"/></td>
+        </tr>
+        <tr>
+            <td class="tableleft">QQ号</td>
+            <td><input type="text" name="qq" value="{$userinfo.qq}"/></td>
+        </tr>
+        <tr>
+            <td class="tableleft">E-mail</td>
+            <td><input type="text" name="email" value="{$userinfo.email}"/></td>
+        </tr>
+        <tr><td colspan="2">
+        <button id="submit" class="btn btn-primary" type="submit">注册</button>
+         <div id="output1"></div>
+        </td></tr>
+    </table>
+</form>
+</body>
+</html>
+<script src="__PUBLIC__/bui-bootstrap/assets/js/bui-min.js"></script>
+<script>
+
+   
+    $(document).ready(function(){
+        /*//如果是修改，地区已选
+        
+           $("#s_province").children().each(function(){
+            if($(this).val()=="{$home['0']}")
+                $(this).attr("selected","selected");
+           });
+           $("#s_city").children().each(function(){
+            if($(this).val()=="{$home['1']}")
+                $(this).attr("selected","selected");
+           }); 
+           $("#s_county").children().each(function(){
+            if($(this).val()=="{$home['2']}")
+                $(this).attr("selected","selected");
+           }); */
+        //选择了学院后的动作
+        $("select[name='college']").change(function(){
+            $("#major").children().remove("[class!='stay']");
+            $("#class").children().remove("[class!='stay']");
+            $.post("{:U('Index/Task/college','','')}",{col:$(this).val().trim()},function(data){
+                    //alert(data[0].name);
+                    var circle = '' ;
+                    for(var i=0;data[i]!=null;i++){
+                        circle+="<option value='"+data[i].id+"'>"+data[i].name+"</option>";
+                    }
+                    //alert(circle);
+                    $("#major").append(circle);
+
+            })
+         });
+    //选择了专业后的动作
+        $("#major").change(function(){
+            $("#class").children().remove("[class!='stay']");
+            $.post("{:U('Index/Task/major','','')}",{col:$(this).val().trim()},function(data){
+                    //alert(data[0].name);
+                    var circle = '' ;
+                    for(var i=0;data[i]!=null;i++){
+                        circle+="<option value='"+data[i].id+"'>"+data[i].name+"</option>";
+                    }
+                    //alert(circle);
+                    $("#class").append(circle);
+
+            })
+        });
+  //form.js表单验证提交
+   var exception=["请选择学院","请选择班级","请选择专业","省份","地级市","市、县级市"] ;
+      function in_array(search,array){
+        for(var i in array){
+            if(array[i]==search){
+                return true;
+            }
+        }
+        return false;
+       }
+      function validate(formData, jqForm, options){
+        for (var i=0; i < formData.length; i++) { 
+            if (!formData[i].value || in_array(formData[i].value,exception) ) { 
+                alert(formData[i].name+"还没有填写哦"); 
+                return false; 
+                        } 
+                } 
+            }        
+            $("#userinfo").submit(function(){
+                var options = {
+                    target : '#output1',
+                    dataType : 'json',
+                    beforeSubmit : validate,
+                    success:function(data){
+                        if(data){
+                            var d = dialog({
+                                content: '恭喜，保存成功咯;-)'
+                            });
+                            d.show();
+                            setTimeout(function () {
+                                d.close().remove();
+                            }, 2000);
+                        }
+                        else {
+                            var d = dialog({
+                                content: '哎呀，保存失败啦-_-!'
+                            });
+                            d.show();
+                            setTimeout(function () {
+                                d.close().remove();
+                            }, 2000);
+                        }
+
+                    }
+                }
+                $(this).ajaxSubmit(options);  
+               return false; //阻止表单默认提交  
+            });
+        
+
+
+    });
+
+
+</script>
